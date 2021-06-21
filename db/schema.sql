@@ -1,0 +1,2 @@
+DROP DATABASE IF EXISTS dashboardDB;
+CREATE DATABASE dashboardDB;
