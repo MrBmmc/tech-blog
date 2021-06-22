@@ -1,43 +1,41 @@
-const {Model, DataTypes} = require('sequelize');
+const { Model, DataTypes } = require('sequelize');
+const bcrypt = require('bcrypt');
 const sequelize = require('../config/config');
-class Comment extends Model {};
+
+class Comment extends Model { 
+    checkPassword(loginPassword) {
+        return bcrypt.compareSync(loginPassword, this.password);
+      }
+}
 
 Comment.init(
     {
-   
-    id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        primaryKey: true,
-        autoIncrement: true
+        id: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            primaryKey: true,
+            autoIncrement: true,
+        },
+        body: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        postId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: 'post',
+                key: 'id',
+              },
+        },
 
     },
-    body: {
-        type: DataTypes.STRING,
-        allowNull: false,
-     
-    },
-    user_id:{
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references:{
-            model: 'user',
-            key:'id'
-        }
-    },
-    post_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-            model: 'post',
-            key: 'id'
-        }
+    {
+        sequelize,
+        freezeTableName: true,
+        underscored: true,
+        modelName: 'comment',
     }
-}, {
-    sequelize,
-    freezeTableName: true,
-    modelName: 'comment'
-
-})
+);
 
 module.exports = Comment;

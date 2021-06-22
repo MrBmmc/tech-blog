@@ -1,0 +1,40 @@
+<div class="card">
+    <div class="card-header flex-row justify-space-between">
+        <h2>{{post.title}}</h2>
+        <p>{{post.user.username}}: {{post.formattedDate}}</p>
+    </div>
+    <div class="card-body">
+        <p>
+            {{post.body}}
+        <p>
+    </div>
+</div>
+<div class="card">
+    <h2 class="card-header">Add Comment</h2>
+    <div class="card-body">
+        <form id="new-comment-form">
+            <input name="post-id" type="hidden" value="{{post.id}}">
+            <textarea name="comment-body" type="text" class="form-input" rows="3"></textarea>
+            <input type="submit" class="btn">
+        </form>
+    </div>
+</div>
+{{#if post.comments.length}}
+<div>
+    <div class="card-header flex-row">
+        <h2>Comments</h2>
+    </div>
+    {{#each post.comments as |comment|}}
+    <div class="card">
+        <div class="card-body">
+            <p>{{comment.user.username}} on {{comment.commentDate}}:</p>
+            <p>
+                {{comment.body}}
+            </p>
+            {{!-- user and date go here --}}
+        </div>
+    </div>
+    {{/each}}
+    {{/if}}
+
+    <script src="/js/comment.js"></script>

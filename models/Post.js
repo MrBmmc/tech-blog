@@ -1,7 +1,12 @@
 const { Model, DataTypes } = require('sequelize');
+const bcrypt = require('bcrypt');
 const sequelize = require('../config/config');
 
-class Post extends Model {};
+class Post extends Model { 
+    checkPassword(loginPassword) {
+        return bcrypt.compareSync(loginPassword, this.password);
+      }
+}
 
 Post.init(
     {
@@ -13,6 +18,7 @@ Post.init(
         },
         title: {
             type: DataTypes.STRING,
+            allowNull: false,
         },
         body: {
             type: DataTypes.STRING,
@@ -24,14 +30,14 @@ Post.init(
             references: {
                 model: 'user',
                 key: 'id',
-            }
-        }
+              },
+        },
     },
     {
         sequelize,
         freezeTableName: true,
         underscored: true,
-        modelName: 'post'
+        modelName: 'post',
     }
 );
 
