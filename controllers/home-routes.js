@@ -1,22 +1,26 @@
 const router = require('express').Router();
 const { Post, Comment, User } = require('../models/');
+const {formatDate} = require('../utils/helpers');
 
 // get all posts for homepage
 router.get('/', async (req, res) => {
+  console.log('my post',Post);
   try {
     // we need to get all Posts and include the User for each (change lines 8 and 9)
-    const postData = await Post.findall({
+    const postData = await Post.findAll({
       include: [User],
     });
     // serialize the data
     const posts = postData.map((post) => post.get({ plain: true }));
     for (let i = 0; i < posts.length; i++) {
-      posts[i].formattedDate = format_date(posts[i].createdAt);
+      posts[i].formattedDate = formatDate(posts[i].createdAt);
     }
     // we should render all the posts here
-    res.render('all-post', { posts });
+    res.render('all-posts', { posts });
   } catch (err) {
-    res.status(500).json(err);
+    // res.render('all-posts', {  });
+    // res.status(500).json(err);
+    console.log(err);
   }
 });
 
@@ -39,9 +43,9 @@ router.get('/post/:id', async (req, res) => {
     if (postData) {
       // serialize the data
       const post = postData.get({ plain: true });
-      post.formattedDate = format_date(post.createdAt);
+      post.formattedDate = formatDate(post.createdAt);
       for (let i = 0; i < post.comments.length; i++) {
-        post.comments[i].commentDate = format_date(post.comments[i].createdAt);
+        post.comments[i].commentDate = formatDate(post.comments[i].createdAt);
       }
       // which view should we render for a single-post?
       res.render('single-post', { post });
